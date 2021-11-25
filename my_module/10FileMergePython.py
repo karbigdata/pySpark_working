@@ -25,7 +25,7 @@ mySchema = StructType([
 def buildDataFrameBatch(batchFilesList, spark):
     resDF = spark.read.schema(mySchema).csv(batchFilesList[0])
     for idx in range(1, len(batchFilesList)):
-        print("fileNames are", len(batchFilesList), "FileName is ", batchFilesList[idx])
+        # print("fileNames are", len(batchFilesList), "FileName is ", batchFilesList[idx])
         nextDF = spark.read.schema(mySchema).csv(batchFilesList[idx])
         resDF = resDF.unionAll(nextDF)
 
@@ -36,8 +36,8 @@ def sendBatchFilesInfo(batchFilesList, sparkSC):
     print("list is ", batchFilesList)
     listDataDFInt = buildDataFrameBatch(batchFilesList, sparkSC)
 
-    for i in listDataDFInt:
-        print("type is ", type(listDataDFInt), " data inside is ", type(listDataDFInt[0]))
+    # for i in listDataDFInt:
+    #     print("type is ", type(listDataDFInt), " data inside is ", type(listDataDFInt[0]))
 
     return listDataDFInt
 
@@ -49,7 +49,7 @@ def printDFInLoop(DataFramesInList):
 
 if __name__ == "__main__":
     sparkSC = initSparkSession()
-    batchSize = 4  # list starts with 0
+    # batchSize = 4  # list starts with 0
     batchSizeNew = 5  # list starts with 0
     batchFiles = []  # empty List
     DFsInList = []
@@ -93,3 +93,53 @@ if __name__ == "__main__":
     #
     # # sending remaining filesList
     # sendBatchFilesInfo(batchFiles, sparkSC)
+
+# OUTPUT ...
+# num of batch files  3
+# idx is  0
+# running count  0
+# running count  1
+# running count  2
+# running count  3
+# running count  4
+# list is  ['data/file1.csv', 'data/file10.csv', 'data/file11.csv', 'data/file12.csv', 'data/file2.csv']
+# batch files are ['data/file1.csv', 'data/file10.csv', 'data/file11.csv', 'data/file12.csv', 'data/file2.csv']
+# idx is  1
+# running count  5
+# running count  6
+# running count  7
+# running count  8
+# running count  9
+# list is  ['data/file3.csv', 'data/file4.csv', 'data/file5.csv', 'data/file6.csv', 'data/file7.csv']
+# batch files are ['data/file3.csv', 'data/file4.csv', 'data/file5.csv', 'data/file6.csv', 'data/file7.csv']
+# idx is  2
+# running count  10
+# running count  11
+# list is  ['data/file8.csv', 'data/file9.csv']
+# batch files are ['data/file8.csv', 'data/file9.csv']
+# +---+------+
+# | id| value|
+# +---+------+
+# |  1|   one|
+# | 10|   Ten|
+# | 11|Eleven|
+# | 12|Twelve|
+# |  2|   Two|
+# +---+------+
+#
+# +---+-----+
+# | id|value|
+# +---+-----+
+# |  3|Three|
+# |  4| Four|
+# |  5| Five|
+# |  6|  Six|
+# |  7|Seven|
+# +---+-----+
+#
+# +---+-----+
+# | id|value|
+# +---+-----+
+# |  8|Eight|
+# |  9| Nine|
+# +---+-----+
