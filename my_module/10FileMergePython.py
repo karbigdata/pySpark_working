@@ -23,7 +23,7 @@ mySchema = StructType([
 
 
 def buildDataFrameBatch(batchFilesList, spark):
-    resDF = spark.read.csv(batchFilesList[0])
+    resDF = spark.read.schema(mySchema).csv(batchFilesList[0])
     for idx in range(1, len(batchFilesList)):
         print("fileNames are", len(batchFilesList), "FileName is ", batchFilesList[idx])
         nextDF = spark.read.schema(mySchema).csv(batchFilesList[idx])
